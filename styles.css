@@ -1,15 +1,9 @@
-body {
-    background-color: aquamarine;
+.container {
+    padding: 4rem;
+    text-align: center;
 }
 
-.window {
-    border: 5px solid rgb(88, 5, 241);
-    width: 900px;
-    height: 400px;
-    background-color: black;
-    margin: auto;
-
-    
-    
-    
+/** #canvas -> html-element mit der id='canvas' */
+#canvas {
+    border: 3px solid black;
 }
