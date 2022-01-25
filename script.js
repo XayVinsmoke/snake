@@ -3,8 +3,8 @@ const canvas = document.getElementById("canvas");
 
 const renderer = canvas.getContext("2d");
 
-const colorSnake = '#000000';
-const colorFood = '#aa00aa';
+const colorSnake = '#0000ff';
+const colorFood = '#FFFF00';
 const snakeSize = 20;
 const snakePos = [0, 5]; // [x-pos, y-pos]
 const foodPos = [10, 10];

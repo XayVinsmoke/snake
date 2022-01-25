@@ -1,3 +1,11 @@
+body {
+    background-color: black;
+}
+
+
+
+
+
 .container {
     padding: 4rem;
     text-align: center;
@@ -5,5 +13,5 @@
 
 /** #canvas -> html-element mit der id='canvas' */
 #canvas {
-    border: 3px solid black;
+    border: 3px solid blue;
 }
