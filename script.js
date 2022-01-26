@@ -126,13 +126,22 @@ function keyDown(e) {
         }
     }
     if (e.code == "ArrowDown") {
-        direction = "DOWN";
+
+        if (direction !== "UP") {
+            direction = "DOWN";
+        }
     }
     if (e.code == "ArrowLeft") {
-        direction = "LEFT";
+
+        if (direction !== "RIGHT") {
+            direction = "LEFT";
+        }
     }
     if (e.code == "ArrowRight") {
-        direction = "RIGHT";
+
+        if (direction !== "LEFT") {
+            direction = "RIGHT";
+        }
     }
 }
 
