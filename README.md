@@ -11,14 +11,16 @@ Großes Problem -> Herunterbrechen in kleinere Probleme
 
 Großes Problem: Implementierung von Snake im Browser
 
-1) Rendering im Browser (<canvas>...) #check
-2) 'Schlange' rendern (zu Beginn Rechteck, also nur Schlangenkopf) #check
-3) Game Loop implementieren (Schlangenkopf in eine Richtung bewegen) #check
-3.1) Schlange bewegen (4 Richtungen) #check
-4) Bewegungsrichtung über Benutzereingabe #check
-5) Food spawnen
-6) Schlange kann Food einsammeln und neues Food spawnt
-(Food spawnt nicht in der Schlange aber ansonsten zufällig)
-7) Kollision Schlangenkopf mit der Wand erkennen
-8) Schlangenkörper implementieren, Körper folgt dem Kopf, wächst mit Aufnahme von Food
-9) Kollision mit dem Schlangenkörper
+Kleinere Probleme:
+[x] Generelles Rendering im Browser (<canvas>...) 
+[x] 'Schlange' rendern (zu Beginn Rechteck, also nur Schlangenkopf) 
+[x] Game Loop implementieren (Schlangenkopf in eine Richtung bewegen) 
+[x] Schlange bewegen (4 Richtungen, User Input)
+[x] Food rendern 
+[x] Kollision von Schlange und Food erkennen -> Food verschwindet 
+[x] Kollision von Schlange mit Wand erkennen -> Schlange geht nicht über Rand hinaus
+[ ] Neues Food spawnt -> zufällig -> nicht wo der Schlangenkopf (bzw. Koerper) ist 
+[ ] Schlangenkoerper implementieren, Koerper folgt dem Kopf, waechst mit Aufnahme von Food
+[ ] Kollision von Schlange mit dem Schlangenkoerper
+[ ] Game-Over implementeren
+[ ] Optimierungen?
