@@ -6,10 +6,15 @@ const renderer = canvas.getContext("2d");
 const colorSnake = '#0000ff';
 const colorFood = '#FFFF00';
 const snakeSize = 20;
-const snakePos = [0, 5]; // [x-pos, y-pos]
+const snakeHead = [5, 5]; // [x-pos, y-pos] [let myVar = 100 : address-> 10000000 10000000 000000000 000000000 
+const snakeBody = [ [4, 5], [3, 5], [2, 5], [1, 5] ]; 
+// speichert eine liste aus adressen -> jede addresse zeigt auf eine liste aus addressen -> jede adresse in dieser letzten zeigt auf einen konkreten wert
+console.log('initial:', snakeBody);
+
 const foodPos = [10, 10];
 let direction = 'RIGHT' // LEFT, UP, DOWN
 let frameCounter = 0;
+let updateSpeed = 30;
 const rows    = canvas.height / snakeSize - 1; // anzahl der zeilen in der arena
 const columns = canvas.width / snakeSize - 1; // anzahl der spalten in der arena
 
@@ -22,9 +27,22 @@ document.onkeydown = keyDown;
 
 // function definition (x und y nennt man Funktionsparameter)
 function drawSnakeHead() {
-    // ctx.fillRect(x-pos, y-pos, breite, hoehe);
+    // renderer.fillRect(x-pos, y-pos, breite, hoehe);
     renderer.fillStyle = colorSnake;
-    renderer.fillRect(snakePos[0]*snakeSize, snakePos[1]*snakeSize, snakeSize, snakeSize);
+    renderer.fillRect(snakeHead[0]*snakeSize, snakeHead[1]*snakeSize, snakeSize, snakeSize);
+}
+
+function drawSnakeBody() {
+    renderer.fillStyle = colorSnake;
+    for (let segment of snakeBody) {
+        renderer.fillRect(segment[0]*snakeSize, segment[1]*snakeSize, snakeSize, snakeSize);
+    }
+}
+
+function updateSnakeBody() {
+    console.log('bevor irgendwas passiert:', snakeBody);
+    snakeBody.pop();                                 // entfernt das letzte Schlangenglied aus der Liste 
+    snakeBody.unshift([snakeHead[0], snakeHead[1]]); // schiebt die Position des Kopfes in die Liste der Koerpersegmente (an erste Position)
 }
 
 function drawFood() {
@@ -34,6 +52,24 @@ function drawFood() {
 
 function clearCanvas() {
     renderer.clearRect(0, 0, 720, 480);
+}
+
+function updateSnakeHead() {
+    if (direction == "RIGHT") {
+        snakeHead[0] = snakeHead[0] + 1;
+    }
+
+    if (direction == "LEFT") {
+        snakeHead[0] = snakeHead[0] - 1;
+    }
+
+    if (direction == "UP") {
+        snakeHead[1] = snakeHead[1] - 1;
+    }
+
+    if (direction == "DOWN") {
+        snakeHead[1] = snakeHead[1] + 1;
+    }
 }
 
 function spawnNewFood() {
@@ -46,78 +82,78 @@ function spawnNewFood() {
     // Implementierung von 1)
     let rowPos = Math.floor(Math.random() * rows);
     let colPos = Math.floor(Math.random() * columns);
+
+    // Implementierung von 2)
+    // TODO: Für müssen später auch den Körper hier mit verarbeiten
+    while (colPos == snakeHead[0] && rowPos == snakeHead[1]) {
+        rowPos = Math.floor(Math.random() * rows);
+        colPos = Math.floor(Math.random() * columns);
+    }
+
+
     foodPos[0] = colPos;
     foodPos[1] = rowPos;
 
-    // Implementierung von 2)
 }
 
+// TODO: Actually do GameOver
+function checkGameOver() {
+    // Kollision von Schlange mit Wand
+    // Kollision mit linker Wand
+    if (snakeHead[0] < 0) {
+        snakeHead[0] = 0;
+    }
+    // Kollision mit rechter Wand
+    if (snakeHead[0] > columns) {
+        snakeHead[0] = columns;
+    }
+    // Kollison mit oberer Wand
+    if (snakeHead[1] < 0) {
+        snakeHead[1] = 0;
+    }
+    // Kollision mit unterer Wand
+    if (snakeHead[1] > rows) {
+        snakeHead[1] = rows;
+    }
+    /**
+    if (snakeHead[0] < 0 || snakeHead[0] > columns || snakeHead[1] < 0 || snakeHead[1] > rows) {
+        // gameOver
+    }
+    */
+}
+
+let innerCounter = 0;
 function gameLoop(timeStamp) {
     frameCounter = frameCounter + 1;
 
     // zeichne nur alle 30 Frames etwas Neues
-    if (frameCounter == 30) {
+    // wenn updateSpeed kleiner wird, erhöht sich die Rate der Spielupdates und
+    // damit wird das Spiel insgesamt schneller
+    if (frameCounter == updateSpeed) {
         frameCounter = 1;
         clearCanvas();
+
         // aktualisiere die Position des Schlangenkopfes
-        if (direction == "RIGHT") {
-            snakePos[0] = snakePos[0] + 1;
-        }
-
-        if (direction == "LEFT") {
-            snakePos[0] = snakePos[0] - 1;
-        }
-
-        if (direction == "UP") {
-            snakePos[1] = snakePos[1] - 1;
-        }
-
-        if (direction == "DOWN") {
-            snakePos[1] = snakePos[1] + 1;
-        }
+        updateSnakeBody();
+        updateSnakeHead();
+        checkGameOver();
 
         // Kollision von Schlange mit Food
-        if (snakePos[0] == foodPos[0] && snakePos[1] == foodPos[1]) {
-            spawnNewFood();
-        }
+        if (snakeHead[0] == foodPos[0] && snakeHead[1] == foodPos[1]) {
 
-        // Kollision von Schlange mit Wand
-        // Kollision mit linker Wand
-        if (snakePos[0] < 0) {
-            // gameOver
-            snakePos[0] = 0;
+            spawnNewFood();
+            snakeBody.unshift([snakeHead[0], snakeHead[1]]);
         }
-        // Kollision mit rechter Wand
-        if (snakePos[0] > columns) {
-            // gameOver
-            snakePos[0] = columns;
-        }
-        // Kollison mit oberer Wand
-        if (snakePos[1] < 0) {
-            // gameOver
-            snakePos[1] = 0;
-        }
-        if (snakePos[1] > rows) {
-            // gameOver
-            snakePos[1] = rows;
-        }
-        
-        /**
-        if (snakePos[0] < 0 || snakePos[0] > columns || snakePos[1] < 0 || snakePos[1] > rows) {
-            // gameOver
-        }
-        */
 
         drawFood();
         drawSnakeHead();
-        
+        drawSnakeBody();
     }
 
     // naechsten Frame
     window.requestAnimationFrame(gameLoop);
 }
 
-// TODO: Schlange darf sich nicht um 180 Grad drehen können
 function keyDown(e) {
     if (e.code == "ArrowUp") {
 
@@ -148,5 +184,6 @@ function keyDown(e) {
 // draw first Frame
 drawFood();
 drawSnakeHead();
+drawSnakeBody();
 window.requestAnimationFrame(gameLoop);
 

@@ -19,8 +19,11 @@ Kleinere Probleme:
 [x] Food rendern 
 [x] Kollision von Schlange und Food erkennen -> Food verschwindet 
 [x] Kollision von Schlange mit Wand erkennen -> Schlange geht nicht über Rand hinaus
-[ ] Neues Food spawnt -> zufällig -> nicht wo der Schlangenkopf (bzw. Koerper) ist 
-[ ] Schlangenkoerper implementieren, Koerper folgt dem Kopf, waechst mit Aufnahme von Food
+[x] Neues Food spawnt -> zufällig 
+   [x] Food spawnt nicht auf dem Schlangenkopf
+   [ ] Food spawnt nicht auf dem Schlangenkörper
+[x] Schlangenkoerper implementieren, Koerper folgt dem Kopf, 
+[x] Schlangenkoerper waechst mit Aufnahme von Food
 [ ] Kollision von Schlange mit dem Schlangenkoerper
 [ ] Game-Over implementeren
 [ ] Optimierungen?
