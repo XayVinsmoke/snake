@@ -24,6 +24,7 @@ Kleinere Probleme:
    [ ] Food spawnt nicht auf dem Schlangenkörper
 [x] Schlangenkoerper implementieren, Koerper folgt dem Kopf, 
 [x] Schlangenkoerper waechst mit Aufnahme von Food
-[ ] Kollision von Schlange mit dem Schlangenkoerper
-[ ] Game-Over implementeren
+[x] Kollision von Schlange mit dem Schlangenkoerper
+[x] Game-Over implementeren
+[x] Kollision von Schlange mit Wand 
 [ ] Optimierungen?
