@@ -3,6 +3,7 @@ const canvas = document.getElementById("canvas");
 
 const renderer = canvas.getContext("2d");
 
+
 const colorSnake = '#0000ff';
 const colorFood  = '#FFFF00';
 const snakeSize  = 20;
@@ -12,16 +13,32 @@ const snakeBody  = [ [4, 5], [3, 5], [2, 5], [1, 5] ];
                    // eine liste aus listen
                    // jede addresse zeigt auf eine liste aus addressen ->
                    // jede adresse in dieser letzten zeigt auf einen konkreten Wert
-const foodPos    = [10, 10];
+let foodPos      = [10, 10];
 let direction    = 'RIGHT' // LEFT, UP, DOWN
 let frameCounter = 0;
 let updateSpeed  = 20;
 let gameOver     = false;
-const rows       = canvas.height / snakeSize - 1; // anzahl der zeilen in der arena
-const columns    = canvas.width  / snakeSize - 1; // anzahl der spalten in der arena
+const rows       = (canvas.height / snakeSize - 1); // anzahl der zeilen in der arena
+const columns    = (canvas.width  / snakeSize - 1); // anzahl der spalten in der arena
+
+const playfieldPositions = generatePlayfieldPositions(rows, columns); 
+console.log(playfieldPositions);
+
+function generatePlayfieldPositions(rows, columns) {
+  const tmp = [];
+
+  for (let i = 0; i < rows; i++) {
+    for (let k = 0; k < columns; k++) {
+      // i = 1, k = 5 => [1, 5]
+      tmp.push([k, i]);
+    }
+  }
+  return tmp;
+}
 
 // für das Anzeigen der GameOver Message
 const gameOverTag = document.getElementById('gameover');
+
 
 // draw first Frame
 drawFood();
@@ -83,26 +100,21 @@ function updateSnakeHead() {
     }
 }
 
+function isAllowedPosition(position) {
+  let isHeadOk = !(position[0] == snakeHead[0] && position[1] == snakeHead[1]);
+  let isBodyOk = !(snakeBody.some(seg => seg[0] == position[0] && seg[1] == position[1]));
+  return isHeadOk && isBodyOk; 
+}
+
 function spawnNewFood() {
     // Algorithmus für das Spawnen von neuem Food
-    // 1) Berechne eine zulässige Position zwischen [0,0] und [columns, rows] zufaellig
-    // 2) Pruefe, ob der Schlangenkopf (spaeter der Koerper) diese Position besetzt
-    // Falls Nein -> Setze Food an die Position
-    // Fals Ja -> Wiederhole
-    //
-    // Implementierung von 1)
-    let rowPos = Math.floor(Math.random() * rows);
-    let colPos = Math.floor(Math.random() * columns);
-
-    // Implementierung von 2)
-    // TODO: Für müssen später auch den Körper hier mit verarbeiten
-    while (colPos == snakeHead[0] && rowPos == snakeHead[1]) {
-        rowPos = Math.floor(Math.random() * rows);
-        colPos = Math.floor(Math.random() * columns);
-    }
-
-    foodPos[0] = colPos;
-    foodPos[1] = rowPos;
+    // Wir haben einen Array aus allen Spielfeldpositionen [ [0, 0], [1, 0], ... [rows -1, columns -1] ]
+    // Wir entfernen alle Positionen der Schlange aus dem Array ...
+    // Wir haben dann ein Array aus zulaessigen Positionen
+    // Davon waehlen wir eine zufaellig aus
+    const filteredPositions = playfieldPositions.filter(isAllowedPosition);
+    const index = Math.floor(Math.random() * filteredPositions.length);
+    foodPos = filteredPositions[index];
 }
 
 // TODO: Actually do GameOver
@@ -121,10 +133,10 @@ function checkGameOver() {
 }
 
 let innerCounter = 0;
-function gameLoop(timeStamp) {
+function gameLoop() {
     frameCounter = frameCounter + 1;
 
-    // zeichne nur alle 30 Frames etwas Neues
+    // zeichne nur alle 'updateSpeed' Frames etwas Neues
     // wenn updateSpeed kleiner wird, erhöht sich die Rate der Spielupdates und
     // damit wird das Spiel insgesamt schneller
     if (frameCounter == updateSpeed) {
@@ -148,7 +160,7 @@ function gameLoop(timeStamp) {
         drawSnakeBody();
     }
 
-    // naechsten Frame
+    // naechsten Frame oder Game over
     if (gameOver == false) {
         window.requestAnimationFrame(gameLoop);
     } else {
